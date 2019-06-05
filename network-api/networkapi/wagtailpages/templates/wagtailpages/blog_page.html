@@ -11,6 +11,17 @@
       {{ page.body }}
     </div>
   </div>
+
+  {% block related_pages %}
+  <div>
+    {% for page in related_pages %}
+      <div>
+        <a href={{ page.url }}>{{ page.title }}</a> ({{ page.num_common_tags }} tags in common)
+      </div>
+    {% endfor %}
+  </div>
+  {% endblock %}
+
   {% include "./fragments/ih_cta.html" %}
 </div>
 {% endblock %}

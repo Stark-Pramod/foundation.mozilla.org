@@ -1,5 +1,6 @@
 import json
 from django.db import models
+from django.db.models import Count
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from taggit.models import Tag
@@ -20,7 +21,10 @@ from taggit.models import TaggedItemBase
 from wagtail.admin.edit_handlers import InlinePanel
 from wagtailmetadata.models import MetadataPageMixin
 
-from .utils import get_page_tree_information
+from .utils import (
+    get_page_tree_information,
+    get_related_content
+)
 
 # TODO:  https://github.com/mozilla/foundation.mozilla.org/issues/2362
 from .donation_modal import DonationModals  # noqa: F401
@@ -165,7 +169,7 @@ class MiniSiteNameSpace(ModularPage):
         Extend the context so that mini-site pages know what kind of tree
         they live in, and what some of their local aspects are:
         """
-        context = super(MiniSiteNameSpace, self).get_context(request)
+        context = super().get_context(request)
         updated = get_page_tree_information(self, context)
         updated['mini_site_title'] = updated['root'].title
         return updated
@@ -468,7 +472,7 @@ class PrimaryPage(FoundationMetadataPageMixin, Page):
     show_in_menus_default = True
 
     def get_context(self, request):
-        context = super(PrimaryPage, self).get_context(request)
+        context = super().get_context(request)
         return get_page_tree_information(self, context)
 
 
@@ -512,7 +516,7 @@ class BanneredCampaignPage(PrimaryPage):
     show_in_menus_default = True
 
     def get_context(self, request):
-        context = super(BanneredCampaignPage, self).get_context(request)
+        context = super().get_context(request)
         return get_page_tree_information(self, context)
 
 
@@ -569,6 +573,16 @@ class BlogPage(FoundationMetadataPageMixin, Page):
     # Database fields
 
     zen_nav = True
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        own_tags = self.tags.all();
+        related_pages = BlogPage.objects.filter(tags__in=own_tags).exclude(pk=self.pk).distinct()
+        sorted = related_pages.annotate(num_common_tags=Count('pk')).order_by('-num_common_tags')
+        context['related_pages'] = sorted
+
+        return context
 
 
 class InitiativeSection(models.Model):
@@ -1070,7 +1084,7 @@ class Homepage(FoundationMetadataPageMixin, Page):
     def get_context(self, request):
         # We need to expose MEDIA_URL so that the s3 images will show up properly
         # due to our custom image upload approach pre-wagtail
-        context = super(Homepage, self).get_context(request)
+        context = super().get_context(request)
         context['MEDIA_URL'] = settings.MEDIA_URL
         return context
 

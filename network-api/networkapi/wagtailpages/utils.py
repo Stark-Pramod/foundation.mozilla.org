@@ -86,3 +86,9 @@ def get_mini_side_nav_data(context, page, no_minimum_page_count=False):
         'current': page,
         'menu_pages': menu_pages,
     }
+
+def get_related_content(page):
+    """
+    Get all posts that feel related to this page, based
+    on its `.tags` content. If it has tags.
+    """
