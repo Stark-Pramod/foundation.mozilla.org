@@ -15,8 +15,8 @@
                 {% image page.get_meta_image max-400x200 %}
               </a>
             </div>
-            <a href={{ page.url }}>{{ page.title }}</a>
-            <p class="">by {{ page.author }} on {{ page.last_published_at }}</p>
+            <a class="h4-heading" href={{ page.url }}>{{ page.title }}</a>
+            <p class="body-small">by {{ page.author }} on {{ page.last_published_at }}</p>
           </div>
         {% endfor %}
       </div>
