@@ -1,0 +1,25 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block related_posts %}
+  {% if related_posts|length %}
+    <div class="container">
+      <hr class="hr-emphasis">
+
+      <h1 class="h2-heading mb-5">Related Content</h2>
+
+      <div class="d-flex flex-wrap align-items-start justify-content-between mb-5">
+        {% for page in related_posts %}
+          <div class="related-card">
+            <div>
+              <a href={{ page.url }}>
+                {% image page.get_meta_image max-400x200 %}
+              </a>
+            </div>
+            <a href={{ page.url }}>{{ page.title }}</a>
+            <p class="">by {{ page.owner }} on {{ page.last_published_at }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

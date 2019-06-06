@@ -92,7 +92,7 @@ def get_mini_side_nav_data(context, page, no_minimum_page_count=False):
     }
 
 
-def get_content_related_by_tag(page):
+def get_content_related_by_tag(page, result_count=3):
     """
     Get all posts that feel related to this page, based
     on its `.tags` content. If it has tags.
@@ -133,4 +133,4 @@ def get_content_related_by_tag(page):
         '-last_published_at'
     )
 
-    return ordered
+    return ordered[:result_count]
