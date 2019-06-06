@@ -1,6 +1,5 @@
 import json
 from django.db import models
-from django.db.models import Count
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from taggit.models import Tag
@@ -23,7 +22,7 @@ from wagtailmetadata.models import MetadataPageMixin
 
 from .utils import (
     get_page_tree_information,
-    get_related_content
+    get_content_related_by_tag
 )
 
 # TODO:  https://github.com/mozilla/foundation.mozilla.org/issues/2362
@@ -576,12 +575,7 @@ class BlogPage(FoundationMetadataPageMixin, Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-
-        own_tags = self.tags.all();
-        related_pages = BlogPage.objects.filter(tags__in=own_tags).exclude(pk=self.pk).distinct()
-        sorted = related_pages.annotate(num_common_tags=Count('pk')).order_by('-num_common_tags')
-        context['related_pages'] = sorted
-
+        context['related_posts'] = get_content_related_by_tag(self)
         return context
 
 

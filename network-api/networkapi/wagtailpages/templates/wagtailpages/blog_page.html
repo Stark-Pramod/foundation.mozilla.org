@@ -12,9 +12,10 @@
     </div>
   </div>
 
-  {% block related_pages %}
+  {% block related_posts %}
   <div>
-    {% for page in related_pages %}
+    <div>Tags: {% for tag in page.tags.all %} "{{ tag }}" {% endfor %}</div>
+    {% for page in related_posts %}
       <div>
         <a href={{ page.url }}>{{ page.title }}</a> ({{ page.num_common_tags }} tags in common)
       </div>
