@@ -50,3 +50,15 @@
     background-image: url(/_images/glyphs/share/email.svg);
   }
 }
+
+.related-card {
+  max-width: 100%;
+
+  @media screen and (min-width: $bp-sm) {
+    max-width: 48%;
+  }
+
+  @media screen and (min-width: $bp-md) {
+    max-width: 30%;
+  }
+}
